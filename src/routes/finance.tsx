@@ -65,7 +65,7 @@ function Finance() {
   const cashflow = [...inRange]
     .sort((a, b) => a.date.localeCompare(b.date))
     .reduce<{ date: string; zustatek: number }[]>((acc, t) => {
-      const prev = acc.length ? acc[acc.length - 1].zustatek : netWorth - net;
+      const prev = acc.length ? (acc[acc.length - 1]?.zustatek ?? 0) : netWorth - net;
       acc.push({ date: t.date.slice(5), zustatek: prev + t.amount });
       return acc;
     }, []);

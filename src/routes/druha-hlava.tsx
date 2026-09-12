@@ -61,7 +61,7 @@ function SecondBrain() {
           type,
           domain: domainName,
           note: `Zatříděno z inboxu ${item.at}`,
-          progress: type === "projekt" ? 0 : undefined,
+          ...(type === "projekt" ? { progress: 0 } : {}),
           tags: [item.kind.toLowerCase()],
         },
         ...s.para,

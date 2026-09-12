@@ -55,8 +55,9 @@ function Planner() {
   const addEvent = (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
-    const [h, m] = start.split(":").map(Number);
-    const end = `${String(h + 1).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+    const h = Number(start.slice(0, 2));
+    const m = start.slice(3, 5);
+    const end = `${String(h + 1).padStart(2, "0")}:${m}`;
     set((s) => ({
       ...s,
       events: [...s.events, { id: uid(), title: title.trim(), date: selected, start, end, kind: "blok" }],
@@ -219,7 +220,7 @@ function Planner() {
                         <div key={e.id} className="rounded-lg bg-primary/10 px-3 py-2 text-sm">
                           <div className="flex items-center justify-between gap-2">
                             <span className="font-medium">{e.title}</span>
-                            <Pill tone={kindTone[e.kind]}>{e.kind}</Pill>
+                            <Pill tone={kindTone[e.kind] ?? "muted"}>{e.kind}</Pill>
                           </div>
                           <div className="text-xs text-muted-foreground">
                             {e.start}–{e.end} {e.link && `· ${e.link}`}
