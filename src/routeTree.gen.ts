@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DenikRouteImport } from './routes/denik'
+import { Route as DruhaHlavaRouteImport } from './routes/druha-hlava'
+import { Route as FinanceRouteImport } from './routes/finance'
+import { Route as KalendarRouteImport } from './routes/kalendar'
+import { Route as PilireRouteImport } from './routes/pilire'
+import { Route as Plan12RouteImport } from './routes/plan-12'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DenikRoute = DenikRouteImport.update({
+  id: '/denik',
+  path: '/denik',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DruhaHlavaRoute = DruhaHlavaRouteImport.update({
+  id: '/druha-hlava',
+  path: '/druha-hlava',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FinanceRoute = FinanceRouteImport.update({
+  id: '/finance',
+  path: '/finance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KalendarRoute = KalendarRouteImport.update({
+  id: '/kalendar',
+  path: '/kalendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PilireRoute = PilireRouteImport.update({
+  id: '/pilire',
+  path: '/pilire',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Plan12Route = Plan12RouteImport.update({
+  id: '/plan-12',
+  path: '/plan-12',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/denik': typeof DenikRoute
+  '/druha-hlava': typeof DruhaHlavaRoute
+  '/finance': typeof FinanceRoute
+  '/kalendar': typeof KalendarRoute
+  '/pilire': typeof PilireRoute
+  '/plan-12': typeof Plan12Route
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/denik': typeof DenikRoute
+  '/druha-hlava': typeof DruhaHlavaRoute
+  '/finance': typeof FinanceRoute
+  '/kalendar': typeof KalendarRoute
+  '/pilire': typeof PilireRoute
+  '/plan-12': typeof Plan12Route
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/denik': typeof DenikRoute
+  '/druha-hlava': typeof DruhaHlavaRoute
+  '/finance': typeof FinanceRoute
+  '/kalendar': typeof KalendarRoute
+  '/pilire': typeof PilireRoute
+  '/plan-12': typeof Plan12Route
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/denik'
+    | '/druha-hlava'
+    | '/finance'
+    | '/kalendar'
+    | '/pilire'
+    | '/plan-12'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/denik'
+    | '/druha-hlava'
+    | '/finance'
+    | '/kalendar'
+    | '/pilire'
+    | '/plan-12'
+  id:
+    | '__root__'
+    | '/'
+    | '/denik'
+    | '/druha-hlava'
+    | '/finance'
+    | '/kalendar'
+    | '/pilire'
+    | '/plan-12'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DenikRoute: typeof DenikRoute
+  DruhaHlavaRoute: typeof DruhaHlavaRoute
+  FinanceRoute: typeof FinanceRoute
+  KalendarRoute: typeof KalendarRoute
+  PilireRoute: typeof PilireRoute
+  Plan12Route: typeof Plan12Route
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/denik': {
+      id: '/denik'
+      path: '/denik'
+      fullPath: '/denik'
+      preLoaderRoute: typeof DenikRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/druha-hlava': {
+      id: '/druha-hlava'
+      path: '/druha-hlava'
+      fullPath: '/druha-hlava'
+      preLoaderRoute: typeof DruhaHlavaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/finance': {
+      id: '/finance'
+      path: '/finance'
+      fullPath: '/finance'
+      preLoaderRoute: typeof FinanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kalendar': {
+      id: '/kalendar'
+      path: '/kalendar'
+      fullPath: '/kalendar'
+      preLoaderRoute: typeof KalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pilire': {
+      id: '/pilire'
+      path: '/pilire'
+      fullPath: '/pilire'
+      preLoaderRoute: typeof PilireRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/plan-12': {
+      id: '/plan-12'
+      path: '/plan-12'
+      fullPath: '/plan-12'
+      preLoaderRoute: typeof Plan12RouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DenikRoute: DenikRoute,
+  DruhaHlavaRoute: DruhaHlavaRoute,
+  FinanceRoute: FinanceRoute,
+  KalendarRoute: KalendarRoute,
+  PilireRoute: PilireRoute,
+  Plan12Route: Plan12Route,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
