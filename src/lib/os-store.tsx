@@ -141,6 +141,7 @@ type Ctx = {
   saveError: string | null;
   loading: boolean;
   cloud: true;
+  clearAll: () => Promise<void>;
 };
 
 const StoreContext = React.createContext<Ctx | null>(null);
@@ -219,9 +220,22 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     timer.current = setTimeout(() => setCelebration(null), 2200);
   }, []);
 
+  // Vymaže veškerý obsah účtu (zástupná/demo data i vlastní záznamy) a rovnou
+  // to uloží — nečeká na debounced ukládání, ať uživatel nemá pocit, že to
+  // "nevzalo". Nevratné, potvrzení řeší volající (viz profil.tsx).
+  const clearAll = React.useCallback(async () => {
+    if (!userId) return;
+    setSyncing(true);
+    set(seed);
+    ready.current = true;
+    const { error } = await supabase.from("os_state").upsert({ user_id: userId, data: seed as unknown as never });
+    setSyncing(false);
+    setSaveError(error ? "Smazání se nezdařilo — zkontroluj připojení." : null);
+  }, [userId]);
+
   return (
     <StoreContext.Provider
-      value={{ state, set, celebrate, celebration, syncing, saveError, loading, cloud: true }}
+      value={{ state, set, celebrate, celebration, syncing, saveError, loading, cloud: true, clearAll }}
     >
       {children}
     </StoreContext.Provider>
