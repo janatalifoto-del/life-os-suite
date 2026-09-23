@@ -21,12 +21,23 @@ export const Route = createFileRoute("/profil")({
 
 function ProfilePage() {
   const { user, profile, loading, refreshProfile, signOut } = useAuth();
-  const { syncing, cloud } = useStore();
+  const { syncing, cloud, clearAll } = useStore();
   const navigate = useNavigate();
   const [name, setName] = React.useState("");
   const [avatar, setAvatar] = React.useState("");
   const [saved, setSaved] = React.useState(false);
   const [busy, setBusy] = React.useState(false);
+  const [clearing, setClearing] = React.useState(false);
+
+  const handleClearAll = async () => {
+    const ok = window.confirm(
+      "Opravdu smazat všechna data? Rituály, úkoly, finance, deník i vše ostatní se nenávratně vymažou z tvého účtu.",
+    );
+    if (!ok) return;
+    setClearing(true);
+    await clearAll();
+    setClearing(false);
+  };
 
   React.useEffect(() => {
     if (!loading && !user) void navigate({ to: "/auth", replace: true });
@@ -102,6 +113,22 @@ function ProfilePage() {
           }}
         >
           Odhlásit se
+        </Button>
+      </Card>
+
+      <Card className="mt-4 border-destructive/30 p-6">
+        <div className="text-sm font-medium text-destructive">Nebezpečná zóna</div>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Smaže veškerý obsah účtu — rituály, úkoly, 12týdenní cíl, kalendář, finance, druhou hlavu, pilíře i deník.
+          Nedá se vrátit zpět.
+        </p>
+        <Button
+          variant="soft"
+          className="mt-4 bg-destructive/10 text-destructive hover:bg-destructive/20"
+          onClick={handleClearAll}
+          disabled={clearing}
+        >
+          {clearing ? "Mažu…" : "Smazat všechna data"}
         </Button>
       </Card>
     </div>
