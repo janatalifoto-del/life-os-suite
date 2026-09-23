@@ -11,3 +11,5 @@
 - [x] Deník: ranní záměr, večerní reflexe, vděčnost, náladometr, archiv
 - [x] Týdenní reset: inbox zero, kontrola cílů, revize financí, plán priorit
 - [x] Navigace se všemi moduly + filtrování podle oblastí
+
+- [x] Přihlášení (e-mail + Google), profil se jménem a avatarem, ukládání dat do účtu
