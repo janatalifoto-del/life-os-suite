@@ -2,7 +2,7 @@ import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CalendarDays, Plus } from "lucide-react";
 import { Card, SectionTitle, Pill, CheckRow, Input, Select, Button } from "@/components/os";
-import { useStore, uid, today, PRIORITY_LABEL, type Priority } from "@/lib/os-store";
+import { useStore, uid, today, toIso, PRIORITY_LABEL, type Priority } from "@/lib/os-store";
 
 export const Route = createFileRoute("/kalendar")({
   head: () => ({
@@ -19,9 +19,7 @@ export const Route = createFileRoute("/kalendar")({
 const DAYS = ["Po", "Út", "St", "Čt", "Pá", "So", "Ne"];
 const HOURS = Array.from({ length: 14 }, (_, i) => i + 7);
 
-function iso(dt: Date) {
-  return dt.toISOString().slice(0, 10);
-}
+const iso = toIso;
 
 function Planner() {
   const { state, set, celebrate } = useStore();
