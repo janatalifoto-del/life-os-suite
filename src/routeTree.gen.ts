@@ -17,6 +17,7 @@ import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as KalendarRouteImport } from './routes/kalendar'
 import { Route as PilireRouteImport } from './routes/pilire'
 import { Route as Plan12RouteImport } from './routes/plan-12'
+import { Route as ProfilRouteImport } from './routes/profil'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -58,6 +59,11 @@ const Plan12Route = Plan12RouteImport.update({
   path: '/plan-12',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/kalendar': typeof KalendarRoute
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
+  '/profil': typeof ProfilRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/kalendar': typeof KalendarRoute
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
+  '/profil': typeof ProfilRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +97,7 @@ export interface FileRoutesById {
   '/kalendar': typeof KalendarRoute
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
+  '/profil': typeof ProfilRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +110,7 @@ export interface FileRouteTypes {
     | '/kalendar'
     | '/pilire'
     | '/plan-12'
+    | '/profil'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +121,7 @@ export interface FileRouteTypes {
     | '/kalendar'
     | '/pilire'
     | '/plan-12'
+    | '/profil'
   id:
     | '__root__'
     | '/'
@@ -121,6 +132,7 @@ export interface FileRouteTypes {
     | '/kalendar'
     | '/pilire'
     | '/plan-12'
+    | '/profil'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +144,7 @@ export interface RootRouteChildren {
   KalendarRoute: typeof KalendarRoute
   PilireRoute: typeof PilireRoute
   Plan12Route: typeof Plan12Route
+  ProfilRoute: typeof ProfilRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Plan12RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +224,7 @@ const rootRouteChildren: RootRouteChildren = {
   KalendarRoute: KalendarRoute,
   PilireRoute: PilireRoute,
   Plan12Route: Plan12Route,
+  ProfilRoute: ProfilRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
