@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DenikRouteImport } from './routes/denik'
 import { Route as DruhaHlavaRouteImport } from './routes/druha-hlava'
 import { Route as FinanceRouteImport } from './routes/finance'
@@ -20,6 +21,11 @@ import { Route as Plan12RouteImport } from './routes/plan-12'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DenikRoute = DenikRouteImport.update({
@@ -55,6 +61,7 @@ const Plan12Route = Plan12RouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/denik': typeof DenikRoute
   '/druha-hlava': typeof DruhaHlavaRoute
   '/finance': typeof FinanceRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/denik': typeof DenikRoute
   '/druha-hlava': typeof DruhaHlavaRoute
   '/finance': typeof FinanceRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/denik': typeof DenikRoute
   '/druha-hlava': typeof DruhaHlavaRoute
   '/finance': typeof FinanceRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/denik'
     | '/druha-hlava'
     | '/finance'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/denik'
     | '/druha-hlava'
     | '/finance'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/denik'
     | '/druha-hlava'
     | '/finance'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   DenikRoute: typeof DenikRoute
   DruhaHlavaRoute: typeof DruhaHlavaRoute
   FinanceRoute: typeof FinanceRoute
@@ -128,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/denik': {
@@ -177,6 +197,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   DenikRoute: DenikRoute,
   DruhaHlavaRoute: DruhaHlavaRoute,
   FinanceRoute: FinanceRoute,
