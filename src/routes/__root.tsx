@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -11,9 +12,52 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { StoreProvider } from "@/lib/os-store";
-import { AuthProvider } from "@/lib/auth";
+import { StoreProvider, useStore } from "@/lib/os-store";
+import { AuthProvider, useAuth } from "@/lib/auth";
 import { AppShell } from "@/components/AppShell";
+
+function FullScreenSpinner() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background">
+      <div className="size-8 animate-spin rounded-full border-2 border-muted border-t-primary" />
+    </div>
+  );
+}
+
+// Appka je cloud-only: bez přihlášení nemá store co zobrazit, takže
+// nepřihlášeného uživatele pošleme na /auth (kromě té stránky samotné)
+// a AppShell + StoreProvider vykreslíme až po přihlášení.
+function AuthGate({ children }: { children: ReactNode }) {
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    if (!authLoading && !user && pathname !== "/auth") {
+      router.navigate({ to: "/auth" });
+    }
+  }, [authLoading, user, pathname, router]);
+
+  if (authLoading) return <FullScreenSpinner />;
+
+  if (!user) {
+    return pathname === "/auth" ? <>{children}</> : <FullScreenSpinner />;
+  }
+
+  return (
+    <StoreProvider>
+      <StoreGate>{children}</StoreGate>
+    </StoreProvider>
+  );
+}
+
+// Počká, než se z os_state stáhnou reálná data účtu, ať appka neblikne
+// prázdným/seed stavem před tím, než dorazí to skutečné.
+function StoreGate({ children }: { children: ReactNode }) {
+  const { loading } = useStore();
+  if (loading) return <FullScreenSpinner />;
+  return <AppShell>{children}</AppShell>;
+}
 
 function NotFoundComponent() {
   return (
@@ -118,12 +162,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <StoreProvider>
-          <AppShell>
-            {/* Required: nested routes render here. */}
-            <Outlet />
-          </AppShell>
-        </StoreProvider>
+        <AuthGate>
+          {/* Required: nested routes render here. */}
+          <Outlet />
+        </AuthGate>
       </AuthProvider>
     </QueryClientProvider>
   );
