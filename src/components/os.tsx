@@ -159,6 +159,19 @@ export function Input(props: React.InputHTMLAttributes<HTMLInputElement>) {
   );
 }
 
+export function Textarea(props: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
+  return (
+    <textarea
+      rows={2}
+      {...props}
+      className={cn(
+        "w-full rounded-xl border border-input bg-background px-3 py-2 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20",
+        props.className,
+      )}
+    />
+  );
+}
+
 export function Select(props: React.SelectHTMLAttributes<HTMLSelectElement>) {
   return (
     <select
@@ -185,7 +198,7 @@ export function Button({
     <button
       {...rest}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition active:scale-[0.97]",
+        "inline-flex items-center justify-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50",
         v,
         className,
       )}
