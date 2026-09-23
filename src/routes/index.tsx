@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Flame, Zap, Gift, Sunrise, MoonStar, Plus } from "lucide-react";
+import { Flame, Zap, Gift, Sunrise, MoonStar, Plus, Trash2 } from "lucide-react";
 import { Card, SectionTitle, Bar, Pill, CheckRow, Ring, Input, Select, Button } from "@/components/os";
 import { useStore, useDailyScore, uid, today, czk } from "@/lib/os-store";
 
@@ -27,6 +27,26 @@ function Dashboard() {
   const score = useDailyScore();
   const [text, setText] = React.useState("");
   const [kind, setKind] = React.useState("Myšlenka");
+  const [newMorning, setNewMorning] = React.useState("");
+  const [newEvening, setNewEvening] = React.useState("");
+
+  const addRitual = (part: "rano" | "vecer", title: string) => {
+    if (!title.trim()) return;
+    set((s) => ({
+      ...s,
+      rituals: [...s.rituals, { id: uid(), title: title.trim(), part, done: false, streak: 0 }],
+    }));
+    part === "rano" ? setNewMorning("") : setNewEvening("");
+  };
+
+  const removeRitual = (id: string) =>
+    set((s) => ({ ...s, rituals: s.rituals.filter((r) => r.id !== id) }));
+
+  const removeTask = (id: string) =>
+    set((s) => ({ ...s, tasks: s.tasks.filter((t) => t.id !== id) }));
+
+  const removeInboxItem = (id: string) =>
+    set((s) => ({ ...s, inbox: s.inbox.filter((i) => i.id !== id) }));
 
   const toggleRitual = (id: string) =>
     set((s) => ({
@@ -147,7 +167,15 @@ function Dashboard() {
               {state.inbox.slice(0, 4).map((i) => (
                 <div key={i.id} className="flex items-center gap-2 rounded-xl bg-muted/60 px-3 py-2 text-sm">
                   <Pill tone="accent">{i.kind}</Pill>
-                  <span className="truncate">{i.text}</span>
+                  <span className="flex-1 truncate">{i.text}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeInboxItem(i.id)}
+                    aria-label="Smazat záznam"
+                    className="shrink-0 rounded-lg p-1 text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
                 </div>
               ))}
               {state.inbox.length === 0 && <p className="text-sm text-muted-foreground">Inbox je prázdný. 🎉</p>}
@@ -192,12 +220,40 @@ function Dashboard() {
               onToggle={() => toggleRitual(r.id)}
               label={r.title}
               right={
-                <Pill tone={r.streak > 10 ? "success" : "muted"}>
-                  <Flame className="size-3" /> {r.streak}
-                </Pill>
+                <div className="flex items-center gap-1">
+                  <Pill tone={r.streak > 10 ? "success" : "muted"}>
+                    <Flame className="size-3" /> {r.streak}
+                  </Pill>
+                  <button
+                    type="button"
+                    onClick={() => removeRitual(r.id)}
+                    aria-label="Smazat rituál"
+                    className="rounded-lg p-1 text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
               }
             />
           ))}
+          {morning.length === 0 && <p className="px-3 text-sm text-muted-foreground">Zatím žádný ranní rituál.</p>}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addRitual("rano", newMorning);
+            }}
+            className="mt-3 flex gap-2"
+          >
+            <Input
+              value={newMorning}
+              onChange={(e) => setNewMorning(e.target.value)}
+              placeholder="Nový ranní rituál…"
+              aria-label="Nový ranní rituál"
+            />
+            <Button type="submit" variant="soft">
+              <Plus className="size-4" />
+            </Button>
+          </form>
         </Card>
 
         <Card>
@@ -209,12 +265,40 @@ function Dashboard() {
               onToggle={() => toggleRitual(r.id)}
               label={r.title}
               right={
-                <Pill tone={r.streak > 10 ? "success" : "muted"}>
-                  <Flame className="size-3" /> {r.streak}
-                </Pill>
+                <div className="flex items-center gap-1">
+                  <Pill tone={r.streak > 10 ? "success" : "muted"}>
+                    <Flame className="size-3" /> {r.streak}
+                  </Pill>
+                  <button
+                    type="button"
+                    onClick={() => removeRitual(r.id)}
+                    aria-label="Smazat rituál"
+                    className="rounded-lg p-1 text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
               }
             />
           ))}
+          {evening.length === 0 && <p className="px-3 text-sm text-muted-foreground">Zatím žádný večerní rituál.</p>}
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              addRitual("vecer", newEvening);
+            }}
+            className="mt-3 flex gap-2"
+          >
+            <Input
+              value={newEvening}
+              onChange={(e) => setNewEvening(e.target.value)}
+              placeholder="Nový večerní rituál…"
+              aria-label="Nový večerní rituál"
+            />
+            <Button type="submit" variant="soft">
+              <Plus className="size-4" />
+            </Button>
+          </form>
         </Card>
 
         <Card>
@@ -226,6 +310,16 @@ function Dashboard() {
               onToggle={() => toggleTask(t.id)}
               label={t.title}
               meta={t.pillar}
+              right={
+                <button
+                  type="button"
+                  onClick={() => removeTask(t.id)}
+                  aria-label="Smazat úkol"
+                  className="rounded-lg p-1 text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+              }
             />
           ))}
           {score.todayTasks.length === 0 && (
