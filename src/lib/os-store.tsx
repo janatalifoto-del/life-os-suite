@@ -1,4 +1,6 @@
 import * as React from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
 
 /* ---------------- Types ---------------- */
 
@@ -344,6 +346,8 @@ type Ctx = {
   set: React.Dispatch<React.SetStateAction<State>>;
   celebrate: (msg: string) => void;
   celebration: string | null;
+  syncing: boolean;
+  cloud: boolean;
 };
 
 const StoreContext = React.createContext<Ctx | null>(null);
@@ -352,7 +356,11 @@ const KEY = "zivot-os-v1";
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [state, set] = React.useState<State>(seed);
   const [celebration, setCelebration] = React.useState<string | null>(null);
+  const [syncing, setSyncing] = React.useState(false);
   const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+  const ready = React.useRef(false);
 
   React.useEffect(() => {
     try {
@@ -371,6 +379,43 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }, [state]);
 
+  // Načtení dat z účtu (nebo první nahrání lokálních dat do účtu)
+  React.useEffect(() => {
+    ready.current = false;
+    if (!userId) return;
+    let cancelled = false;
+    (async () => {
+      setSyncing(true);
+      const { data } = await supabase.from("os_state").select("data").eq("user_id", userId).maybeSingle();
+      if (cancelled) return;
+      const remote = (data as { data?: State } | null)?.data;
+      if (remote && typeof remote === "object" && Array.isArray(remote.rituals)) {
+        set({ ...seed, ...remote });
+      } else {
+        set((current) => {
+          void supabase.from("os_state").upsert({ user_id: userId, data: current as unknown as never });
+          return current;
+        });
+      }
+      ready.current = true;
+      setSyncing(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  // Průběžné ukládání do účtu
+  React.useEffect(() => {
+    if (!userId || !ready.current) return;
+    setSyncing(true);
+    const t = setTimeout(async () => {
+      await supabase.from("os_state").upsert({ user_id: userId, data: state as unknown as never });
+      setSyncing(false);
+    }, 900);
+    return () => clearTimeout(t);
+  }, [state, userId]);
+
   const celebrate = React.useCallback((msg: string) => {
     setCelebration(msg);
     if (timer.current) clearTimeout(timer.current);
@@ -378,7 +423,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <StoreContext.Provider value={{ state, set, celebrate, celebration }}>{children}</StoreContext.Provider>
+    <StoreContext.Provider value={{ state, set, celebrate, celebration, syncing, cloud: !!userId }}>
+      {children}
+    </StoreContext.Provider>
   );
 }
 

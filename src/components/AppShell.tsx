@@ -16,6 +16,38 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/lib/os-store";
+import { useAuth } from "@/lib/auth";
+
+function UserBox({ collapsed }: { collapsed: boolean }) {
+  const { user, profile } = useAuth();
+  const { syncing, cloud } = useStore();
+  const label = profile?.display_name || user?.email || "Přihlásit se";
+  const initial = (profile?.display_name || user?.email || "?").slice(0, 1).toUpperCase();
+
+  return (
+    <Link
+      to={user ? "/profil" : "/auth"}
+      title={label}
+      className="mb-2 flex items-center gap-2 rounded-xl px-2 py-2 text-sm transition-colors hover:bg-muted"
+    >
+      <div className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-primary/15 text-xs font-semibold text-primary">
+        {profile?.avatar_url ? (
+          <img src={profile.avatar_url} alt="" className="size-full object-cover" />
+        ) : (
+          initial
+        )}
+      </div>
+      {!collapsed && (
+        <div className="min-w-0">
+          <div className="truncate text-xs font-medium">{label}</div>
+          <div className="truncate text-[11px] text-muted-foreground">
+            {cloud ? (syncing ? "Ukládám…" : "Uloženo v účtu") : "Data jen v prohlížeči"}
+          </div>
+        </div>
+      )}
+    </Link>
+  );
+}
 
 const NAV = [
   { to: "/", label: "Dopamin & Denní mise", icon: Flame },
@@ -98,6 +130,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
+        <div className="border-t border-border pt-3">
+          <UserBox collapsed={collapsed} />
+        </div>
         <div className="flex items-center gap-1 border-t border-border pt-3">
           <button
             onClick={() => setCollapsed((c) => !c)}
@@ -131,6 +166,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {item.label.split(" ")[0]}
             </Link>
           ))}
+          <div className="shrink-0">
+            <UserBox collapsed={true} />
+          </div>
         </header>
         <main className="mx-auto w-full max-w-[1240px] px-4 py-6 md:px-8 md:py-8">{children}</main>
       </div>

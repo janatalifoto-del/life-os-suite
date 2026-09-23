@@ -10,16 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as DenikRouteImport } from './routes/denik'
 import { Route as DruhaHlavaRouteImport } from './routes/druha-hlava'
 import { Route as FinanceRouteImport } from './routes/finance'
 import { Route as KalendarRouteImport } from './routes/kalendar'
 import { Route as PilireRouteImport } from './routes/pilire'
 import { Route as Plan12RouteImport } from './routes/plan-12'
+import { Route as ProfilRouteImport } from './routes/profil'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DenikRoute = DenikRouteImport.update({
@@ -52,73 +59,92 @@ const Plan12Route = Plan12RouteImport.update({
   path: '/plan-12',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProfilRoute = ProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/denik': typeof DenikRoute
   '/druha-hlava': typeof DruhaHlavaRoute
   '/finance': typeof FinanceRoute
   '/kalendar': typeof KalendarRoute
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
+  '/profil': typeof ProfilRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/denik': typeof DenikRoute
   '/druha-hlava': typeof DruhaHlavaRoute
   '/finance': typeof FinanceRoute
   '/kalendar': typeof KalendarRoute
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
+  '/profil': typeof ProfilRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/denik': typeof DenikRoute
   '/druha-hlava': typeof DruhaHlavaRoute
   '/finance': typeof FinanceRoute
   '/kalendar': typeof KalendarRoute
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
+  '/profil': typeof ProfilRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/denik'
     | '/druha-hlava'
     | '/finance'
     | '/kalendar'
     | '/pilire'
     | '/plan-12'
+    | '/profil'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/denik'
     | '/druha-hlava'
     | '/finance'
     | '/kalendar'
     | '/pilire'
     | '/plan-12'
+    | '/profil'
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/denik'
     | '/druha-hlava'
     | '/finance'
     | '/kalendar'
     | '/pilire'
     | '/plan-12'
+    | '/profil'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   DenikRoute: typeof DenikRoute
   DruhaHlavaRoute: typeof DruhaHlavaRoute
   FinanceRoute: typeof FinanceRoute
   KalendarRoute: typeof KalendarRoute
   PilireRoute: typeof PilireRoute
   Plan12Route: typeof Plan12Route
+  ProfilRoute: typeof ProfilRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -128,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/denik': {
@@ -172,17 +205,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Plan12RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/profil': {
+      id: '/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof ProfilRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   DenikRoute: DenikRoute,
   DruhaHlavaRoute: DruhaHlavaRoute,
   FinanceRoute: FinanceRoute,
   KalendarRoute: KalendarRoute,
   PilireRoute: PilireRoute,
   Plan12Route: Plan12Route,
+  ProfilRoute: ProfilRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
