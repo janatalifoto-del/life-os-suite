@@ -43,67 +43,80 @@
   --color-surface-2: var(--surface-2);
 }
 
+/* Světlý režim: žlutorůžový nádech (krémová, růžová, zlatá) */
 :root {
   --radius: 0.9rem;
-  --background: oklch(0.982 0.006 95);
-  --foreground: oklch(0.21 0.02 285);
-  --surface: oklch(1 0 0);
-  --surface-2: oklch(0.962 0.008 95);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.21 0.02 285);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.02 285);
-  --primary: oklch(0.62 0.19 25);
+  --background: oklch(0.975 0.024 88);
+  --foreground: oklch(0.25 0.04 15);
+  --surface: oklch(0.995 0.01 82);
+  --surface-2: oklch(0.955 0.03 62);
+  --card: oklch(0.995 0.01 82);
+  --card-foreground: oklch(0.25 0.04 15);
+  --popover: oklch(0.995 0.012 82);
+  --popover-foreground: oklch(0.25 0.04 15);
+  --primary: oklch(0.62 0.2 8);
   --primary-foreground: oklch(0.99 0.01 90);
-  --secondary: oklch(0.94 0.02 95);
-  --secondary-foreground: oklch(0.25 0.02 285);
-  --muted: oklch(0.95 0.008 95);
-  --muted-foreground: oklch(0.52 0.02 285);
-  --accent: oklch(0.85 0.18 95);
-  --accent-foreground: oklch(0.24 0.03 80);
+  --secondary: oklch(0.945 0.04 75);
+  --secondary-foreground: oklch(0.28 0.04 15);
+  --muted: oklch(0.948 0.032 80);
+  --muted-foreground: oklch(0.5 0.04 20);
+  --accent: oklch(0.88 0.16 92);
+  --accent-foreground: oklch(0.3 0.06 75);
   --destructive: oklch(0.58 0.22 27);
   --destructive-foreground: oklch(0.99 0 0);
-  --success: oklch(0.66 0.16 155);
+  --success: oklch(0.63 0.15 158);
   --warning: oklch(0.79 0.16 75);
-  --border: oklch(0.9 0.01 90);
-  --input: oklch(0.9 0.01 90);
-  --ring: oklch(0.62 0.19 25);
-  --chart-1: oklch(0.62 0.19 25);
-  --chart-2: oklch(0.78 0.17 90);
-  --chart-3: oklch(0.66 0.16 155);
-  --chart-4: oklch(0.58 0.15 255);
-  --chart-5: oklch(0.62 0.2 320);
+  --border: oklch(0.89 0.04 62);
+  --input: oklch(0.89 0.04 62);
+  --ring: oklch(0.62 0.2 8);
+  --chart-1: oklch(0.62 0.2 8);
+  --chart-2: oklch(0.82 0.16 90);
+  --chart-3: oklch(0.63 0.15 158);
+  --chart-4: oklch(0.6 0.15 255);
+  --chart-5: oklch(0.7 0.17 45);
+  /* aura: barvy rozmazaných záblesků na pozadí + barvy přechodového textu */
+  --aura-1: oklch(0.86 0.12 5 / 0.55);
+  --aura-2: oklch(0.93 0.15 95 / 0.62);
+  --aura-3: oklch(0.88 0.1 40 / 0.45);
+  --aura-a: oklch(0.6 0.2 8);
+  --aura-b: oklch(0.68 0.17 58);
 }
 
+/* Tmavý režim: tmavě modrá, zlatá a zelená */
 .dark {
-  --background: oklch(0.17 0.014 285);
-  --foreground: oklch(0.96 0.005 95);
-  --surface: oklch(0.215 0.016 285);
-  --surface-2: oklch(0.25 0.018 285);
-  --card: oklch(0.215 0.016 285);
-  --card-foreground: oklch(0.96 0.005 95);
-  --popover: oklch(0.215 0.016 285);
-  --popover-foreground: oklch(0.96 0.005 95);
-  --primary: oklch(0.72 0.17 30);
-  --primary-foreground: oklch(0.17 0.02 285);
-  --secondary: oklch(0.27 0.02 285);
-  --secondary-foreground: oklch(0.96 0.005 95);
-  --muted: oklch(0.26 0.018 285);
-  --muted-foreground: oklch(0.7 0.02 285);
-  --accent: oklch(0.85 0.18 95);
-  --accent-foreground: oklch(0.2 0.03 80);
-  --destructive: oklch(0.66 0.2 25);
+  --background: oklch(0.19 0.07 262);
+  --foreground: oklch(0.96 0.015 90);
+  --surface: oklch(0.24 0.07 260);
+  --surface-2: oklch(0.29 0.07 260);
+  --card: oklch(0.24 0.07 260);
+  --card-foreground: oklch(0.96 0.015 90);
+  --popover: oklch(0.26 0.07 260);
+  --popover-foreground: oklch(0.96 0.015 90);
+  --primary: oklch(0.82 0.15 85);
+  --primary-foreground: oklch(0.17 0.05 262);
+  --secondary: oklch(0.3 0.07 260);
+  --secondary-foreground: oklch(0.96 0.015 90);
+  --muted: oklch(0.3 0.065 260);
+  --muted-foreground: oklch(0.72 0.04 250);
+  --accent: oklch(0.76 0.16 165);
+  --accent-foreground: oklch(0.17 0.05 262);
+  --destructive: oklch(0.68 0.2 25);
   --destructive-foreground: oklch(0.98 0 0);
-  --success: oklch(0.75 0.17 155);
+  --success: oklch(0.78 0.18 148);
   --warning: oklch(0.83 0.16 80);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 14%);
-  --ring: oklch(0.72 0.17 30);
-  --chart-1: oklch(0.72 0.17 30);
-  --chart-2: oklch(0.85 0.18 95);
-  --chart-3: oklch(0.75 0.17 155);
-  --chart-4: oklch(0.68 0.15 255);
-  --chart-5: oklch(0.7 0.19 320);
+  --border: oklch(0.8 0.08 250 / 16%);
+  --input: oklch(0.8 0.08 250 / 20%);
+  --ring: oklch(0.82 0.15 85);
+  --chart-1: oklch(0.82 0.15 85);
+  --chart-2: oklch(0.76 0.16 165);
+  --chart-3: oklch(0.78 0.18 148);
+  --chart-4: oklch(0.66 0.16 255);
+  --chart-5: oklch(0.72 0.15 10);
+  --aura-1: oklch(0.48 0.19 262 / 0.7);
+  --aura-2: oklch(0.78 0.15 85 / 0.3);
+  --aura-3: oklch(0.68 0.16 160 / 0.3);
+  --aura-a: oklch(0.82 0.15 85);
+  --aura-b: oklch(0.78 0.16 160);
 }
 
 @layer base {
@@ -115,6 +128,32 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.5s ease;
+  }
+  /* Aura: dvě pomalu plovoucí vrstvy barevných záblesků za celou appkou */
+  body::before,
+  body::after {
+    content: "";
+    position: fixed;
+    inset: -25%;
+    z-index: -1;
+    pointer-events: none;
+    will-change: transform;
+  }
+  body::before {
+    background:
+      radial-gradient(38% 42% at 18% 24%, var(--aura-1), transparent 70%),
+      radial-gradient(34% 40% at 82% 16%, var(--aura-2), transparent 70%),
+      radial-gradient(40% 44% at 68% 86%, var(--aura-3), transparent 70%);
+    animation: aura-drift 28s ease-in-out infinite alternate;
+  }
+  body::after {
+    background:
+      radial-gradient(36% 40% at 58% 42%, var(--aura-3), transparent 70%),
+      radial-gradient(34% 38% at 8% 82%, var(--aura-2), transparent 70%),
+      radial-gradient(30% 36% at 94% 58%, var(--aura-1), transparent 70%);
+    opacity: 0.75;
+    animation: aura-drift 38s ease-in-out infinite alternate-reverse;
   }
   h1,
   h2,
@@ -126,9 +165,37 @@
 }
 
 @utility card-os {
-  background-color: var(--color-surface);
+  background-color: color-mix(in oklab, var(--color-surface) 82%, transparent);
+  backdrop-filter: blur(16px);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
+  transition:
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
+  &:hover {
+    border-color: color-mix(in oklab, var(--primary) 35%, var(--color-border));
+    box-shadow: 0 10px 40px -16px color-mix(in oklab, var(--primary) 55%, transparent);
+  }
+}
+
+/* Záře kolem prvku (kruh skóre, logo) */
+@utility glow {
+  filter: drop-shadow(0 0 10px color-mix(in oklab, var(--primary) 55%, transparent));
+}
+
+/* Pulzující aura; barvu jde změnit přes --aura-glow */
+@utility aura-pulse {
+  animation: aura-pulse 3.2s ease-in-out infinite;
+}
+
+/* Barevně přelévající se text */
+@utility text-aura {
+  background-image: linear-gradient(100deg, var(--aura-a), var(--aura-b), var(--aura-a));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: aura-shift 8s linear infinite;
 }
 
 @utility pop-in {
@@ -167,4 +234,45 @@
 
 @utility celebrate-toast {
   animation: rise 2.2s ease-in-out forwards;
+}
+
+@keyframes aura-drift {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(3%, -4%, 0) scale(1.08) rotate(6deg);
+  }
+  100% {
+    transform: translate3d(-4%, 3%, 0) scale(1.03) rotate(-5deg);
+  }
+}
+
+@keyframes aura-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 color-mix(in oklab, var(--aura-glow, var(--primary)) 0%, transparent),
+      0 0 14px -2px color-mix(in oklab, var(--aura-glow, var(--primary)) 35%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 6px color-mix(in oklab, var(--aura-glow, var(--primary)) 12%, transparent),
+      0 0 26px 2px color-mix(in oklab, var(--aura-glow, var(--primary)) 55%, transparent);
+  }
+}
+
+@keyframes aura-shift {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after,
+  .aura-pulse,
+  .text-aura {
+    animation: none;
+  }
 }
