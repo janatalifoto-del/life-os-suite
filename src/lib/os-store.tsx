@@ -108,6 +108,9 @@ export const PRIORITY_LABEL: Record<Priority, string> = {
 };
 
 /* ---------------- Seed ---------------- */
+// Slouží jako výchozí obsah pro NOVÉHO uživatele (první přihlášení, kdy
+// v tabulce os_state ještě neexistuje jeho řádek). Odhlášený návštěvník
+// tato data už nikdy neuvidí — appka je cloud-only, viz StoreProvider níže.
 
 const seed: State = {
   rituals: [
@@ -320,7 +323,7 @@ const seed: State = {
   ],
   reviews: [
     { id: uid(), week: 6, worked: "Ranní bloky bez telefonu, rychlý feedback od uživatelů.", improve: "Méně schůzek ve středu, víc času na produkt.", score: 88 },
-    { id: uid(), week: 7, worked: "Dva nové platící zákazníci.", improve: "Večerní rutina se rozpadla, vracím procházku.", score: 61 },
+    { id: uid(), week: 7, worked: "Dva noví platící zákazníci.", improve: "Večerní rutina se rozpadla, vracím procházku.", score: 61 },
   ],
   reset: [
     { id: uid(), label: "Vyprázdnit inbox na nulu", group: "Inbox zero", done: false },
@@ -347,71 +350,77 @@ type Ctx = {
   celebrate: (msg: string) => void;
   celebration: string | null;
   syncing: boolean;
-  cloud: boolean;
+  saveError: string | null;
+  loading: boolean;
+  cloud: true;
 };
 
 const StoreContext = React.createContext<Ctx | null>(null);
-const KEY = "zivot-os-v1";
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [state, set] = React.useState<State>(seed);
   const [celebration, setCelebration] = React.useState<string | null>(null);
   const [syncing, setSyncing] = React.useState(false);
+  const [saveError, setSaveError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(true);
   const timer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
   const { user } = useAuth();
   const userId = user?.id ?? null;
   const ready = React.useRef(false);
 
-  React.useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) set(JSON.parse(raw) as State);
-    } catch {
-      /* ignore */
-    }
-  }, []);
-
-  React.useEffect(() => {
-    try {
-      localStorage.setItem(KEY, JSON.stringify(state));
-    } catch {
-      /* ignore */
-    }
-  }, [state]);
-
-  // Načtení dat z účtu (nebo první nahrání lokálních dat do účtu)
+  // Cloud-only: appka nemá lokální fallback. Bez přihlášeného uživatele
+  // zůstává `loading = true` navždy — komponenta, která StoreProvider obaluje
+  // (viz router guard níže), má v tu chvíli přesměrovat na /auth místo
+  // renderování children.
   React.useEffect(() => {
     ready.current = false;
-    if (!userId) return;
+    if (!userId) {
+      setLoading(true);
+      return;
+    }
     let cancelled = false;
     (async () => {
-      setSyncing(true);
-      const { data } = await supabase.from("os_state").select("data").eq("user_id", userId).maybeSingle();
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("os_state")
+        .select("data")
+        .eq("user_id", userId)
+        .maybeSingle();
+
       if (cancelled) return;
+
+      if (error) {
+        setSaveError("Nepodařilo se načíst data z účtu. Zkus obnovit stránku.");
+        setLoading(false);
+        return;
+      }
+
       const remote = (data as { data?: State } | null)?.data;
       if (remote && typeof remote === "object" && Array.isArray(remote.rituals)) {
         set({ ...seed, ...remote });
       } else {
-        set((current) => {
-          void supabase.from("os_state").upsert({ user_id: userId, data: current as unknown as never });
-          return current;
-        });
+        // Nový uživatel — založ mu řádek se seed daty jako startovní obsah.
+        set(seed);
+        await supabase.from("os_state").upsert({ user_id: userId, data: seed as unknown as never });
       }
       ready.current = true;
-      setSyncing(false);
+      setLoading(false);
     })();
     return () => {
       cancelled = true;
     };
   }, [userId]);
 
-  // Průběžné ukládání do účtu
+  // Průběžné ukládání do účtu (debounced), s viditelnou chybou při selhání.
   React.useEffect(() => {
     if (!userId || !ready.current) return;
     setSyncing(true);
     const t = setTimeout(async () => {
-      await supabase.from("os_state").upsert({ user_id: userId, data: state as unknown as never });
+      const { error } = await supabase
+        .from("os_state")
+        .upsert({ user_id: userId, data: state as unknown as never });
       setSyncing(false);
+      setSaveError(error ? "Uložení se nezdařilo — zkontroluj připojení." : null);
     }, 900);
     return () => clearTimeout(t);
   }, [state, userId]);
@@ -423,7 +432,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <StoreContext.Provider value={{ state, set, celebrate, celebration, syncing, cloud: !!userId }}>
+    <StoreContext.Provider
+      value={{ state, set, celebrate, celebration, syncing, saveError, loading, cloud: true }}
+    >
       {children}
     </StoreContext.Provider>
   );
