@@ -18,6 +18,7 @@ import { Route as KalendarRouteImport } from './routes/kalendar'
 import { Route as PilireRouteImport } from './routes/pilire'
 import { Route as Plan12RouteImport } from './routes/plan-12'
 import { Route as ProfilRouteImport } from './routes/profil'
+import { Route as RutinaRouteImport } from './routes/rutina'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -64,6 +65,11 @@ const ProfilRoute = ProfilRouteImport.update({
   path: '/profil',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RutinaRoute = RutinaRouteImport.update({
+  id: '/rutina',
+  path: '/rutina',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
   '/profil': typeof ProfilRoute
+  '/rutina': typeof RutinaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
   '/profil': typeof ProfilRoute
+  '/rutina': typeof RutinaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/pilire': typeof PilireRoute
   '/plan-12': typeof Plan12Route
   '/profil': typeof ProfilRoute
+  '/rutina': typeof RutinaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/pilire'
     | '/plan-12'
     | '/profil'
+    | '/rutina'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/pilire'
     | '/plan-12'
     | '/profil'
+    | '/rutina'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/pilire'
     | '/plan-12'
     | '/profil'
+    | '/rutina'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   PilireRoute: typeof PilireRoute
   Plan12Route: typeof Plan12Route
   ProfilRoute: typeof ProfilRoute
+  RutinaRoute: typeof RutinaRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfilRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rutina': {
+      id: '/rutina'
+      path: '/rutina'
+      fullPath: '/rutina'
+      preLoaderRoute: typeof RutinaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,6 +245,7 @@ const rootRouteChildren: RootRouteChildren = {
   PilireRoute: PilireRoute,
   Plan12Route: Plan12Route,
   ProfilRoute: ProfilRoute,
+  RutinaRoute: RutinaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
