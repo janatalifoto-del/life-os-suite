@@ -130,6 +130,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           })}
         </nav>
 
+        <div className="border-t border-border pt-3">
+          <UserBox collapsed={collapsed} />
+        </div>
         <div className="flex items-center gap-1 border-t border-border pt-3">
           <button
             onClick={() => setCollapsed((c) => !c)}
@@ -163,6 +166,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {item.label.split(" ")[0]}
             </Link>
           ))}
+          <div className="shrink-0">
+            <UserBox collapsed={true} />
+          </div>
         </header>
         <main className="mx-auto w-full max-w-[1240px] px-4 py-6 md:px-8 md:py-8">{children}</main>
       </div>
