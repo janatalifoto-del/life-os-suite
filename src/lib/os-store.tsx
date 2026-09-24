@@ -592,5 +592,4 @@ export function useDailyScore() {
 }
 
 export const today = () => d(0);
-export const dayOffset = d;oday = () => d(0);
 export const dayOffset = d;
