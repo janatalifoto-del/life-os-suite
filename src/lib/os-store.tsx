@@ -423,6 +423,29 @@ function rollover(s: State): State {
 }
 const normalize = (raw: Partial<State>): State => rollover({ ...seed, ...raw } as State);
 
+/** Zcela prázdný stav – použit při "Smazat všechna data". Žádná ukázková data, jen prázdné struktury. */
+const emptyState = (): State => ({
+  rituals: [],
+  tasks: [],
+  goal: { title: "", why: "", milestones: [], weeks: [] },
+  pillars: [],
+  quarters: [],
+  events: [],
+  accounts: [],
+  txs: [],
+  debts: [],
+  envelopes: [],
+  para: [],
+  journal: [],
+  reviews: [],
+  reset: [],
+  inbox: [],
+  rewards: [],
+  weekPlan: [],
+  monthly: [],
+  lastDay: today(),
+});
+
 /* ---------------- Context ---------------- */
 
 type Ctx = {
@@ -432,6 +455,7 @@ type Ctx = {
   celebration: string | null;
   syncing: boolean;
   cloud: boolean;
+  clearAll: () => Promise<void>;
 };
 
 const StoreContext = React.createContext<Ctx | null>(null);
@@ -517,8 +541,26 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     timer.current = setTimeout(() => setCelebration(null), 2200);
   }, []);
 
+  // Smaže veškerá data uživatele – lokálně, v localStorage i v účtu (Supabase).
+  const clearAll = React.useCallback(async () => {
+    const fresh = emptyState();
+    set(fresh);
+    try {
+      localStorage.setItem(KEY, JSON.stringify(fresh));
+    } catch {
+      /* ignore */
+    }
+    if (userId) {
+      setSyncing(true);
+      await supabase.from("os_state").upsert({ user_id: userId, data: fresh as unknown as never });
+      setSyncing(false);
+    }
+  }, [userId]);
+
   return (
-    <StoreContext.Provider value={{ state, set, celebrate, celebration, syncing, cloud: !!userId }}>
+    <StoreContext.Provider
+      value={{ state, set, celebrate, celebration, syncing, cloud: !!userId, clearAll }}
+    >
       {children}
     </StoreContext.Provider>
   );
@@ -550,4 +592,5 @@ export function useDailyScore() {
 }
 
 export const today = () => d(0);
+export const dayOffset = d;oday = () => d(0);
 export const dayOffset = d;
